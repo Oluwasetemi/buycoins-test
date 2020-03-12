@@ -34,7 +34,7 @@ async function start() {
     server.installSubscriptionHandlers(httpServer);
 
     // Call listen on the server to launch the web server
-    httpServer.listen({ port: 4000 }, () =>
+    httpServer.listen({ port: process.env.PORT || 4000 }, () =>
         console.log(`GraphQL Server running at http://localhost:4000${server.graphqlPath} and socket is running at ws://localhost:4000/graphql`)
     );
 
