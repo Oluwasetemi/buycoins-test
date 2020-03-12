@@ -24,7 +24,7 @@ async function start() {
     server.applyMiddleware({ app });
 
     app.get('/', (req, res) => {
-        res.end(`<a href="${url}">Welcome to the buycoins test</a>`)
+        res.redirect('\graphiql')
     });
 
     app.get('/graphiql', expressPlayground({ endpoint: '/graphql' }));
