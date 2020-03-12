@@ -4,6 +4,8 @@ const conversions = [{ id: 1, result: 340000 }];
 
 const Query = {
   calculatePrice: async (parent, args) => {
+    // convert the args.type enum to lowercase
+    args.type = args.type.toLowerCase();
     // Get the percentage
     const margin = args.margin / 100;
     // Get bitcoin-dollar rate and make computations with supplied values
