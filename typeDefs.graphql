@@ -1,0 +1,27 @@
+# enum typeEnum {
+# 	SELL
+# 	BUY
+# }
+
+"""
+Returns a Buying or Selling Rate
+"""
+type Conversion {
+	id: ID!
+	result: Float!
+}
+
+type Query {
+	"""
+	History of conversions made
+	"""
+	allConversions: [Conversion!]!
+	"""
+	Calculate
+	"""
+	calculatePrice(
+		type: String!
+		margin: Float!
+		exchangeRate: Int!
+	): Conversion!
+}

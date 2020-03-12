@@ -1,0 +1,17 @@
+{
+  "name": "buycoins-test",
+  "version": "1.0.0",
+  "description": "buycoin graphql test with one query",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Oluwasetemi Ojo <tiphen101@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "apollo-server-express": "^2.11.0",
+    "axios": "^0.19.2",
+    "express": "^4.17.1",
+    "graphql-playground-middleware-express": "^1.7.12"
+  }
+}
