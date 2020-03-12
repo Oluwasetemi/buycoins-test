@@ -43,4 +43,4 @@ async function start() {
 
 }
 
-start();
+exports.start = start();

@@ -4,7 +4,7 @@
 	"description": "buycoin graphql test with one query",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "jest test/resolver.test.js",
 		"start": "node index.js"
 	},
 	"author": "Oluwasetemi Ojo <tiphen101@gmail.com>",
@@ -14,5 +14,11 @@
 		"axios": "^0.19.2",
 		"express": "^4.17.1",
 		"graphql-playground-middleware-express": "^1.7.12"
+	},
+	"devDependencies": {
+		"jest": "^25.1.0"
+	},
+	"repository": {
+		"url": "https://github.com/Oluwasetemi/buycoins-test.git"
 	}
 }
