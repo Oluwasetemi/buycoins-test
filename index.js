@@ -19,7 +19,8 @@ async function start() {
     const server = new ApolloServer({
         typeDefs,
         resolvers,
-        introspection: true
+        introspection: true,
+        context: () => ({ pubsub })
     });
 
     server.applyMiddleware({ app });
@@ -36,8 +37,7 @@ async function start() {
 
     // Call listen on the server to launch the web server
     httpServer.listen({ port: process.env.PORT || 4000 }, () =>
-        {console.log(server.graphqlPath)
-        console.log(`GraphQL Server running at http://localhost:4000${server.graphqlPath} and socket is running at ws://localhost:4000/graphql`)}
+        console.log(`GraphQL Server running at http://localhost:4000${server.graphqlPath} and socket is running at ws://localhost:4000/graphql`)
     );
 
 

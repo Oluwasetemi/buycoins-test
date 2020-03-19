@@ -25,3 +25,7 @@ type Query {
 		exchangeRate: Int!
 	): Conversion!
 }
+
+type Subscription {
+	newConversion: Conversion!
+}

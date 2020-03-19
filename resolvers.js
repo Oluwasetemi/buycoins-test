@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 const axios = require('axios');
 
-const conversions = [{ id: 1, result: 340000 }];
+const conversions = [{ id: 1, result: 1400 }];
 
 const Query = {
-  calculatePrice: async (parent, args) => {
+  calculatePrice: async (parent, args, { pubsub }) => {
     // convert the args.type enum to lowercase
     args.type = args.type.toLowerCase();
     // Get the percentage
@@ -43,13 +44,24 @@ const Query = {
     // Add the records of the conversion to our 'makeshift' database
     conversions.push(result);
     // Return output of conversion
+
+    // publish the result
+    pubsub.publish('calculate-price', { newConversion: result });
     return result;
   },
   allConversions: (parent, args) => conversions
 };
 
+const Subscription = {
+  newConversion: {
+    subscribe: (parent, args, { pubsub }) =>
+      pubsub.asyncIterator('calculate-price')
+  }
+};
+
 const resolvers = {
-  Query
+  Query,
+  Subscription
 };
 
 module.exports = resolvers;
