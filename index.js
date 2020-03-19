@@ -2,15 +2,35 @@
 const { ApolloServer, PubSub } = require('apollo-server-express');
 const express = require('express');
 const expressPlayground = require('graphql-playground-middleware-express').default;
+const {Pool, Client} = require('pg');
 const { readFileSync } = require('fs');
 const { createServer } = require('http');
 
 
 const typeDefs = readFileSync('./typeDefs.graphql', 'UTF-8');
 const resolvers = require('./resolvers');
+const connectionString = `postgressql://localhost:5432/buycoins`
 
 
 async function start() {
+    // setup postgres db
+    // const pool = new Pool({
+    //     connectionString: connectionString,
+    // })
+
+    // pool.query('SELECT * FROM conversion', (err, res) => {
+    //     console.log(err, res)
+    //     pool.end()
+    // })
+    const client = new Client({
+        connectionString: connectionString,
+    })
+
+    client.connect()
+    // client.query('INSERT into conversion(id, result) VALUES(4, 20) ', (err, res) => {
+    //     console.log({err, res})
+    //     client.end()
+    // })
     // Create a new instance of the server
     const app = express();
 
@@ -20,7 +40,7 @@ async function start() {
         typeDefs,
         resolvers,
         introspection: true,
-        context: () => ({ pubsub })
+        context: () => ({ pubsub, client })
     });
 
     server.applyMiddleware({ app });

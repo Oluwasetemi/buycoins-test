@@ -1,10 +1,8 @@
 /* eslint-disable no-unused-vars */
 const axios = require('axios');
 
-const conversions = [{ id: 1, result: 1400 }];
-
 const Query = {
-  calculatePrice: async (parent, args, { pubsub }) => {
+  calculatePrice: async (parent, args, { pubsub, client }) => {
     // convert the args.type enum to lowercase
     args.type = args.type.toLowerCase();
     // Get the percentage
@@ -20,36 +18,37 @@ const Query = {
 
     if (args.type === 'buy') {
       updatedRate = dollarRate + dollarRate * margin;
-    } else if (args.type === 'sell') {
-      updatedRate = dollarRate - dollarRate * margin;
     } else {
-      const defaultConversionResult = {
-        id: 0,
-        result: null
-      };
-      conversions.push(defaultConversionResult);
-
-      return defaultConversionResult;
+      updatedRate = dollarRate - dollarRate * margin;
     }
+
+    const insertText = 'INSERT into conversion(result) VALUES($1) RETURNING * ';
+
+    const result = (updatedRate * args.exchangeRate).toFixed(2);
+
+    const done = await client.query(insertText, [result]);
 
     /**
      * Final conversion result is the product of the computed rate
      * and the supplied exchange naira-dollar rate
      */
-    const result = {
-      id: conversions.length + 1,
-      result: (updatedRate * args.exchangeRate).toFixed(2)
+    // Add the records of the conversion to our 'makeshift' database
+    // Return output of conversion
+    const resultData = {
+      id: done.rows[0].id,
+      result
     };
 
-    // Add the records of the conversion to our 'makeshift' database
-    conversions.push(result);
-    // Return output of conversion
+    // conversions.push(result);
 
     // publish the result
-    pubsub.publish('calculate-price', { newConversion: result });
-    return result;
+    pubsub.publish('calculate-price', { newConversion: resultData });
+    return resultData;
   },
-  allConversions: (parent, args) => conversions
+  allConversions: async (parent, args, { client }) => {
+    const data = await client.query('SELECT * from conversion');
+    return data.rows;
+  }
 };
 
 const Subscription = {
